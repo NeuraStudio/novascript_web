@@ -1,0 +1,19 @@
+import NovaWebMod
+import NovaIO
+
+Nova.show("==================================================")
+Nova.show("   DEPLOYING NEURA STUDIO OFFICIAL WEBSITE        ")
+Nova.show("==================================================")
+
+web = WebsiteEngine()
+web.init()
+
+Nova.show(" ")
+web.renderHeroSection()
+web.renderDownloadInterface()
+web.renderNovaHub()
+
+Nova.show(" ")
+Nova.show("==================================================")
+Nova.show(" WEBSITE SUCCESSFULLY COMPILED TO WASM BINARY!    ")
+Nova.show("==================================================")
