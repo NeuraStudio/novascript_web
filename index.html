@@ -5,118 +5,198 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nova Singularity Engine | Neura Studio</title>
     <style>
-        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #0D1117; color: #FFFFFF; line-height: 1.6; }
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; background: rgba(13, 17, 23, 0.85); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #30363D; }
-        .logo { font-size: 22px; font-weight: 900; display: flex; align-items: center; gap: 8px; letter-spacing: 1px; }
-        .logo span { color: #00FF88; }
-        .nav-links { display: flex; gap: 35px; }
-        .nav-links a { color: #C9D1D9; text-decoration: none; font-weight: 600; transition: color 0.2s; font-size: 14px; }
-        .nav-links a:hover { color: #00FF88; }
-        .btn-download { background: linear-gradient(90deg, #00A2FF, #0077FF); color: white; padding: 10px 24px; border-radius: 20px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 15px rgba(0, 162, 255, 0.4); font-size: 14px; }
+        :root { --bg: #0D1117; --text: #FFFFFF; --primary: #00A2FF; --neon: #00FF88; --card: #161B22; --border: #30363D; }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
         
-        .hero { text-align: center; padding: 100px 20px 60px; }
-        .hero h1 { font-size: 4.5rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; }
-        .hero p { font-size: 1.25rem; color: #8B949E; max-width: 700px; margin: 0 auto 40px; }
-        .btn-outline { border: 1px solid #30363D; padding: 12px 30px; border-radius: 8px; color: white; text-decoration: none; font-weight: 600; margin: 0 10px; background: #161B22; }
+        /* Navbar */
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; background: rgba(13, 17, 23, 0.85); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
+        .logo { font-size: 22px; font-weight: 900; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .logo span { color: var(--neon); }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: #C9D1D9; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--neon); }
+        .btn-download { background: linear-gradient(90deg, #00A2FF, #0077FF); color: white; padding: 10px 24px; border-radius: 20px; font-weight: bold; cursor: pointer; border: none; }
         
-        /* IDE Command Box */
-        .cmd-box { background: #161B22; border: 1px solid #30363D; border-radius: 12px; max-width: 800px; margin: 50px auto; text-align: left; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .cmd-header { background: #0D1117; padding: 12px 20px; border-bottom: 1px solid #30363D; display: flex; gap: 8px; align-items: center; font-family: monospace; color: #8B949E; font-size: 13px; }
+        /* Page Router */
+        .page { display: none; padding: 60px 20px; max-width: 1200px; margin: 0 auto; min-height: 80vh; animation: fadeIn 0.4s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Overview Page */
+        .syntax-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
+        .syntax-card { background: var(--card); padding: 30px; border-radius: 16px; border: 1px solid var(--border); }
+        .syntax-card h3 { color: var(--primary); margin-top: 0; }
+        .btn-learn { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 8px 20px; border-radius: 8px; margin-top: 15px; cursor: pointer; }
+        
+        /* Premium White Theme CMD */
+        .white-cmd { background: #FFFFFF; color: #333333; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid #E1E4E8; }
+        .cmd-header { background: #F6F8FA; padding: 15px 20px; border-bottom: 1px solid #E1E4E8; display: flex; align-items: center; gap: 8px; font-family: monospace; font-weight: bold; color: #586069; }
         .dot { width: 12px; height: 12px; border-radius: 50%; }
-        .cmd-body { padding: 30px; font-family: 'Courier New', Courier, monospace; font-size: 15px; }
-        .c-gray { color: #8B949E; } .c-cyan { color: #79C0FF; } .c-pink { color: #FF7B72; } .c-green { color: #7EE787; }
+        .cmd-body { padding: 30px; font-family: 'Courier New', monospace; font-size: 16px; }
         
-        /* Chart Section */
-        .chart-container { max-width: 800px; margin: 80px auto; background: #ffffff; color: #000; padding: 50px; border-radius: 24px; text-align: left; }
-        .bar-group { margin-bottom: 25px; }
-        .bar-label { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 700; font-size: 14px; }
-        .bar-bg { background: #E1E4E8; height: 12px; border-radius: 6px; overflow: hidden; }
-        .bar-fill { height: 100%; border-radius: 6px; }
+        /* Download Engine */
+        .download-box { background: var(--card); padding: 50px; border-radius: 20px; border: 1px solid var(--border); text-align: center; }
+        .selector { display: flex; justify-content: center; gap: 20px; margin: 30px 0; }
+        .select-btn { padding: 15px 30px; background: #0D1117; border: 2px solid var(--border); color: white; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        .select-btn.active { border-color: var(--neon); background: rgba(0, 255, 136, 0.1); }
+        .generated-code { background: #010409; padding: 20px; border-radius: 12px; font-family: monospace; color: var(--neon); font-size: 18px; margin-top: 30px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         
-        /* Hub Section */
-        .hub-section { text-align: center; padding: 80px 20px; background: #010409; border-top: 1px solid #30363D; }
-        .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; max-width: 1000px; margin: 40px auto 0; }
-        .pkg-card { background: #0D1117; border: 1px solid #30363D; padding: 25px 20px; border-radius: 16px; text-align: center; transition: all 0.3s ease; }
-        .pkg-card:hover { transform: translateY(-5px); border-color: #00A2FF; box-shadow: 0 10px 20px rgba(0, 162, 255, 0.1); }
-        .pkg-name { font-weight: bold; font-size: 18px; margin-bottom: 15px; }
-        .pkg-cmd { background: #161B22; padding: 10px; border-radius: 8px; font-family: monospace; color: #00FF88; font-size: 12px; border: 1px solid #30363D; }
+        /* Nova Hub */
+        .search-bar { width: 100%; max-width: 600px; padding: 15px 25px; border-radius: 30px; border: 1px solid var(--primary); background: rgba(0, 162, 255, 0.1); color: white; font-size: 18px; outline: none; margin-bottom: 40px; }
+        .hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .pkg-card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 16px; transition: 0.3s; }
+        .pkg-card:hover { border-color: var(--neon); transform: translateY(-5px); }
+        .pkg-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; font-weight: bold; font-size: 18px; }
+        .pkg-icon { width: 40px; height: 40px; background: #FFF; border-radius: 8px; padding: 5px; }
+        .copy-cmd { background: #010409; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 13px; color: var(--primary); cursor: pointer; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
 
+    <!-- NAVBAR -->
     <div class="navbar">
-        <div class="logo">NEURA <span>STUDIO</span></div>
+        <div class="logo" onclick="nav('home')">NEURA <span>STUDIO</span></div>
         <div class="nav-links">
-            <a href="#">Overview</a>
-            <a href="#">Nova Hub</a>
-            <a href="#">Execute CMD</a>
+            <a onclick="nav('overview')">Overview</a>
+            <a onclick="nav('hub')">Nova Hub</a>
+            <a onclick="nav('cmd')">Execute CMD</a>
         </div>
-        <a href="#" class="btn-download">Download Engine</a>
+        <button class="btn-download" onclick="nav('download')">Download Engine</button>
     </div>
 
-    <div class="hero">
-        <h1>Make your code faster.</h1>
-        <p>Nova is the ultimate God-Mode alternative to Python, Java, and C++. Built for AI, Robotics, and Quantum computing with real-time OS control. All while staying familiar and simple to use.</p>
-        <div>
-            <a href="#" class="btn-outline">Learn Nova</a>
-            <a href="#" class="btn-outline">Features & Arch</a>
+    <!-- 1. HOME PAGE -->
+    <div id="home" class="page active" style="text-align: center;">
+        <h1 style="font-size: 5rem; margin-top: 50px;">Make your code faster.</h1>
+        <p style="font-size: 1.2rem; color: #8B949E;">The 24-Page Omni-Domain Architecture. Build Web, AI, and OS with one language.</p>
+        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80" style="border-radius: 20px; margin-top: 40px; width: 80%; border: 1px solid var(--border); box-shadow: 0 0 30px rgba(0,255,136,0.2);">
+    </div>
+
+    <!-- 2. OVERVIEW PAGE -->
+    <div id="overview" class="page">
+        <h1>Nova Architecture & Syntax</h1>
+        <p style="color: #8B949E;">Deep dive into the 8000+ ecosystem killer.</p>
+        <div class="syntax-grid">
+            <div class="syntax-card">
+                <h3>Native OS Control</h3>
+                <pre style="color: #79C0FF;">Nova.hardware.cpu.alloc(16)</pre>
+                <button class="btn-learn">Read Docs</button>
+            </div>
+            <div class="syntax-card">
+                <h3>Zero-Latency AI</h3>
+                <pre style="color: #79C0FF;">Nova.ai.train(model, GPU_CORES)</pre>
+                <button class="btn-learn">View API</button>
+            </div>
+            <div class="syntax-card">
+                <h3>Self-Healing Runtime</h3>
+                <pre style="color: #79C0FF;">Nova.pro.activateSelfHealing()</pre>
+                <button class="btn-learn">Enterprise Features</button>
+            </div>
+            <div class="syntax-card">
+                <h3>WASM Web Engine</h3>
+                <pre style="color: #79C0FF;">ui.exportToWASM(page)</pre>
+                <button class="btn-learn">Web Tutorials</button>
+            </div>
         </div>
     </div>
 
-    <!-- Real-time OS Control Snippet -->
-    <div class="cmd-box">
-        <div class="cmd-header">
-            <div class="dot" style="background:#FF5F56;"></div><div class="dot" style="background:#FFBD2E;"></div><div class="dot" style="background:#27C93F;"></div>
-            <span style="margin-left: 10px;">main.nova - Neura Studio Engine</span>
-        </div>
-        <div class="cmd-body">
-            <div class="c-gray">// 1. Direct OS Override & Hardware Allocation</div>
-            <div><span class="c-cyan">Nova</span>.<span class="c-green">os.kernel_bypass</span>(<span class="c-pink">true</span>)</div>
-            <div><span class="c-cyan">Nova</span>.<span class="c-green">hardware.cpu.alloc</span>(<span class="c-pink">16</span>, <span class="c-green">"threads"</span>)</div>
-            <br>
-            <div class="c-gray">// 2. Native AI Compilation</div>
-            <div><span class="c-pink">async fn</span> <span class="c-green">train_logic</span>() {</div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-cyan">Nova</span>.<span class="c-green">ai.think</span>(<span class="c-green">'Optimize neural networks natively'</span>)</div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-cyan">Nova</span>.<span class="c-green">show</span>(<span class="c-green">'God-Mode Activated by Javed.'</span>)</div>
-            <div>}</div>
+    <!-- 3. PREMIUM CMD PAGE -->
+    <div id="cmd" class="page">
+        <h1 style="text-align: center;">Nova Web Interpreter</h1>
+        <div class="white-cmd">
+            <div class="cmd-header">
+                <div class="dot" style="background:#FF5F56;"></div><div class="dot" style="background:#FFBD2E;"></div><div class="dot" style="background:#27C93F;"></div>
+                <span>nova-repl - Premium Edition</span>
+            </div>
+            <div class="cmd-body">
+                <div style="color: #00A2FF; font-weight: bold;">Nova 1.0.0-GodMode (White Theme Activated)</div>
+                <div style="color: #6a737d; margin-bottom: 20px;">Type your commands below.</div>
+                <div><span style="color: #28a745;">>>></span> <span style="color: #6f42c1;">import</span> NovaProMod</div>
+                <div><span style="color: #28a745;">>>></span> Nova.show(<span style="color: #032f62;">"Welcome to the Apple-Level Terminal."</span>)</div>
+                <div style="color: #24292e; margin-top: 10px;">Welcome to the Apple-Level Terminal.</div>
+                <div><span style="color: #28a745;">>>></span> <span style="animation: blink 1s infinite;">|</span></div>
+            </div>
         </div>
     </div>
 
-    <!-- Execution Speed Chart -->
-    <div class="chart-container">
-        <h2 style="text-align: center; margin-bottom: 40px; font-size: 28px;">Unrivaled Execution Speed</h2>
+    <!-- 4. DOWNLOAD ENGINE -->
+    <div id="download" class="page">
+        <h1>Download Engine</h1>
+        <div class="download-box">
+            <h3>1. Select Operating System</h3>
+            <div class="selector" id="os-selector">
+                <button class="select-btn active" onclick="setOpt('os', 'Windows')">🪟 Windows</button>
+                <button class="select-btn" onclick="setOpt('os', 'Mac')">🍏 Mac</button>
+                <button class="select-btn" onclick="setOpt('os', 'Linux')">🐧 Linux</button>
+            </div>
+            <h3>2. Select Target IDE / Terminal</h3>
+            <div class="selector" id="ide-selector">
+                <button class="select-btn active" onclick="setOpt('ide', 'VS Code')">VS Code</button>
+                <button class="select-btn" onclick="setOpt('ide', 'PyCharm')">PyCharm</button>
+                <button class="select-btn" onclick="setOpt('ide', 'Terminal')">Terminal Core</button>
+            </div>
+            
+            <div class="generated-code">
+                <span id="install-cmd">curl -sSL https://neurastudio.com/install.nv | nova-setup --os=Windows --target="VS Code"</span>
+                <button class="btn-learn" onclick="alert('Command Copied!')">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. NOVA HUB -->
+    <div id="hub" class="page" style="text-align: center;">
+        <h1>Nova Hub 📦</h1>
+        <input type="text" id="searchPkg" class="search-bar" placeholder="Search 3,560,000+ packages (e.g., Python, React)..." onkeyup="searchHub()">
         
-        <div class="bar-group">
-            <div class="bar-label"><span>Nova (Native Bytecode)</span><span style="color: #00A2FF;">0.01ms</span></div>
-            <div class="bar-bg"><div class="bar-fill" style="width: 98%; background: #00A2FF;"></div></div>
-        </div>
-        <div class="bar-group">
-            <div class="bar-label"><span>Mojo</span><span style="color: #FF8C00;">0.02ms</span></div>
-            <div class="bar-bg"><div class="bar-fill" style="width: 80%; background: #FF8C00;"></div></div>
-        </div>
-        <div class="bar-group">
-            <div class="bar-label"><span>C++ (GCC O3)</span><span style="color: #586069;">0.05ms</span></div>
-            <div class="bar-bg"><div class="bar-fill" style="width: 50%; background: #586069;"></div></div>
-        </div>
-        <div class="bar-group">
-            <div class="bar-label"><span>Python 3.11</span><span style="color: #D73A49;">5.20ms</span></div>
-            <div class="bar-bg"><div class="bar-fill" style="width: 8%; background: #D73A49;"></div></div>
-        </div>
-    </div>
-
-    <!-- Nova Hub Section -->
-    <div class="hub-section">
-        <h2 style="font-size: 36px; margin-bottom: 10px;">Nova Hub <span style="color:#00A2FF;">📦</span></h2>
-        <p style="color: #8B949E; margin-bottom: 40px;">The Universal Package Manager. Search and install from 3,560,000+ packages.</p>
-        <div class="hub-grid">
-            <div class="pkg-card"><div class="pkg-name">python:tensorflow</div><div class="pkg-cmd">Nova.import('python:tensorflow')</div></div>
-            <div class="pkg-card"><div class="pkg-name">js:react</div><div class="pkg-cmd">Nova.import('js:react')</div></div>
-            <div class="pkg-card"><div class="pkg-name">rust:tokio</div><div class="pkg-cmd">Nova.import('rust:tokio')</div></div>
-            <div class="pkg-card"><div class="pkg-name">cpp:boost</div><div class="pkg-cmd">Nova.import('cpp:boost')</div></div>
-            <div class="pkg-card"><div class="pkg-name">python:django</div><div class="pkg-cmd">Nova.import('python:django')</div></div>
-            <div class="pkg-card"><div class="pkg-name">nova:quantum-core</div><div class="pkg-cmd">Nova.import('nova:quantum-core')</div></div>
+        <div class="hub-grid" id="pkgGrid">
+            <!-- Simulated Real Icons -->
+            <div class="pkg-card" data-name="python tensorflow ai">
+                <div class="pkg-header"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Tensorflow_logo.svg" class="pkg-icon"> python:tensorflow</div>
+                <div class="copy-cmd" onclick="alert('Copied!')"><span>Nova.import('python:tensorflow')</span> 📋</div>
+            </div>
+            <div class="pkg-card" data-name="js javascript react web">
+                <div class="pkg-header"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" class="pkg-icon"> js:react</div>
+                <div class="copy-cmd" onclick="alert('Copied!')"><span>Nova.import('js:react')</span> 📋</div>
+            </div>
+            <div class="pkg-card" data-name="java spring backend">
+                <div class="pkg-header"><img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Spring_Framework_Logo_2018.svg" class="pkg-icon"> java:spring</div>
+                <div class="copy-cmd" onclick="alert('Copied!')"><span>Nova.import('java:spring')</span> 📋</div>
+            </div>
+            <div class="pkg-card" data-name="rust tokio fast">
+                <div class="pkg-header"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Rust_programming_language_black_logo.svg" class="pkg-icon"> rust:tokio</div>
+                <div class="copy-cmd" onclick="alert('Copied!')"><span>Nova.import('rust:tokio')</span> 📋</div>
+            </div>
         </div>
     </div>
 
+    <!-- JAVASCRIPT FOR ROUTING AND LOGIC -->
+    <script>
+        // 1. Router Logic (Handles the 24-page structure)
+        function nav(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // 2. Download Engine Logic
+        let currentOS = "Windows"; let currentIDE = "VS Code";
+        function setOpt(type, val) {
+            if(type === 'os') currentOS = val;
+            if(type === 'ide') currentIDE = val;
+            // Update Active Buttons visually
+            event.target.parentElement.querySelectorAll('.select-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            // Generate Code
+            document.getElementById('install-cmd').innerText = `curl -sSL https://neurastudio.com/install.nv | nova-setup --os=${currentOS} --target="${currentIDE}"`;
+        }
+
+        // 3. Nova Hub Search Logic
+        function searchHub() {
+            let input = document.getElementById('searchPkg').value.toLowerCase();
+            let cards = document.querySelectorAll('.pkg-card');
+            cards.forEach(card => {
+                if(card.getAttribute('data-name').includes(input)) card.style.display = "block";
+                else card.style.display = "none";
+            });
+        }
+    </script>
 </body>
 </html>
