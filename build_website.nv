@@ -1,0 +1,78 @@
+// ========================================================
+// Nova Native WASM Website Builder
+// Bypassing HTML/CSS completely. Direct GPU Rendering.
+// ========================================================
+
+import NovaUIMod
+import NovaCollections
+import NovaIO
+
+// 1. Initialize UI Engine
+ui = UIEngine()
+ui.init()
+page = ui.createPage("Nova Singularity Engine | Neura Studio")
+
+// 2. The Apple-Level Navbar
+nav = ui.createNavbar(theme="DarkGlass")
+nav.addLogo("NEURA STUDIO", "images/neura_logo.png")
+nav.addLinks(["Overview", "Nova Hub", "Execute CMD"])
+nav.addButton("Download Engine", color="CyanGlow")
+page.add(nav)
+
+// 3. Hero Section (Ref: 7315.jpg & 7272.jpg)
+hero = ui.createSection("Hero")
+hero.addHeading("Make your code faster.", size="80px", weight="Bold")
+hero.addSubText("Nova is the ultimate God-Mode alternative to Python, Java, and C++. Built for AI, Robotics, and Quantum computing with real-time OS control. All while staying familiar and simple to use.")
+hero.addButtons(["Learn Nova", "Features & Arch", "Syntax Master"])
+// Adding the 3 overlapping images natively
+hero.addImages(["laptop_code.png", "desk_setup.png", "matrix_rain.png"], style="OverlapDisplay")
+page.add(hero)
+
+// 4. The CMD Code Interpreter Box (Ref: 7271.jpg)
+cmdBox = ui.createCodeBox(title="main.nova - Neura Studio Engine")
+cmdBox.addLine("// 1. Direct OS Override & Hardware Allocation", color="Gray")
+cmdBox.addLine("Nova.os.kernel_bypass(true)", color="Cyan")
+cmdBox.addLine("Nova.hardware.cpu.alloc(16, 'threads')", color="Cyan")
+cmdBox.addLine("")
+cmdBox.addLine("// 2. Native AI Compilation", color="Gray")
+cmdBox.addLine("async fn train_logic() {", color="Pink")
+cmdBox.addLine("    Nova.ai.think('Optimize neural networks natively')", color="Cyan")
+cmdBox.addLine("    Nova.show('God-Mode Activated.')", color="Cyan")
+cmdBox.addLine("}", color="Pink")
+page.add(cmdBox)
+
+// 5. Unrivaled Execution Speed Chart (Ref: 5919_2.jpg)
+chart = ui.createBarChart("Unrivaled Execution Speed")
+chart.addBar("Nova (Native Bytecode)", "0.01ms", color="Cyan", width="99%")
+chart.addBar("Mojo", "0.02ms", color="Orange", width="85%")
+chart.addBar("C++ (GCC O3)", "0.05ms", color="Gray", width="50%")
+chart.addBar("C# (.NET)", "1.20ms", color="Purple", width="25%")
+chart.addBar("Java", "1.50ms", color="Orange", width="15%")
+chart.addBar("Python 3.11", "5.20ms", color="Red", width="5%")
+page.add(chart)
+
+// 6. Testimonials Section
+testimonials = ui.createGrid(columns=2)
+testimonials.addQuote("Forbes", "Nova is just so clean and powerful. I don't really anticipate a learning curve for new developers.")
+testimonials.addQuote("TechRadar", "It has everything in terms of offering a friendly experience to those coming from Python or Java.")
+page.add(testimonials)
+
+// 7. Nova Hub Universal Package Manager (Ref: 5902_2.jpg)
+hub = ui.createSection("Nova Hub")
+hub.addHeading("Nova Hub 📦")
+hub.addSubText("The Universal Package Manager. Search and install from 3,560,000+ packages.")
+hubGrid = ui.createGrid(columns=4)
+hubGrid.addCard("python:tensorflow", "Nova.import('python:tensorflow')", logo="tensorflow.png")
+hubGrid.addCard("js:react", "Nova.import('js:react')", logo="react.png")
+hubGrid.addCard("java:spring", "Nova.import('java:spring')", logo="spring.png")
+hubGrid.addCard("cpp:boost", "Nova.import('cpp:boost')", logo="cpp.png")
+hubGrid.addCard("rust:tokio", "Nova.import('rust:tokio')", logo="rust.png")
+hubGrid.addCard("nova:quantum-core", "Nova.import('nova:quantum-core')", logo="nova_quantum.png")
+hubGrid.addCard("php:laravel", "Nova.import('php:laravel')", logo="laravel.png")
+hub.add(hubGrid)
+page.add(hub)
+
+// 8. COMPILE TO WASM
+Nova.show("-> Compiling entire UI to single 'index.wasm' binary...")
+ui.exportToWASM(page, output="index.wasm")
+Nova.show("--> SUCCESS: Website built exclusively using Nova Script!")
